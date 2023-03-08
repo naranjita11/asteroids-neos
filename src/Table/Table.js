@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -81,7 +81,7 @@ function Row(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -99,38 +99,42 @@ function Row(props) {
         <TableCell align="right">{row.potentially_haz.toString()}</TableCell>
         <TableCell align="right">{row.sentry_obj.toString()}</TableCell>
       </TableRow>
-      {/* <TableRow>
+      <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                Approaches
+                Approaches to earth
               </Typography>
               <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Previous 5 approaches</TableCell>
-                    <TableCell>Next 5 approaches</TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
-                  {row.approaches.map((approachRow) => (
-                    <TableRow key={approachRow.name}>
+                    <TableRow>
                       <TableCell component="th" scope="row">
-                        "Previous five data"
+                        Previous approaches:
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        "Next five Data"
+                      {!isLoading &&
+                        (previousApproaches.length !== 0 ? previousApproaches.join(', ') : "None recorded")
+                      }
                       </TableCell>
                     </TableRow>
-                  ))}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Next approaches:
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                      {!isLoading &&
+                        (nextApproaches.length !== 0 ? nextApproaches.join(', ') : "None recorded")
+                      }
+                      </TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </Box>
           </Collapse>
         </TableCell>
-      </TableRow> */}
-    </React.Fragment>
+      </TableRow>
+    </>
   );
 }
 
