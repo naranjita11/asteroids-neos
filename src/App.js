@@ -5,8 +5,6 @@ import { DatePicker  } from '@mui/x-date-pickers/DatePicker';
 import Button from '@mui/material/Button';
 import CollapsibleTable from './Table/Table';
 import { API_KEY } from './Api/api_key';
-// import * as testdata from './TestData.json';
-// const testdata = require('./TestData.json'); 
 
 function App() {
   const [startDate, setStartDate] = useState(undefined);
@@ -30,7 +28,6 @@ function App() {
     setIsFetchingData(false);
     setElementCount(json.element_count);
     setData(json.near_earth_objects);
-    console.log(json);
   }
 
   const onClick = () => {
