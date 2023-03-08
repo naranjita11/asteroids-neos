@@ -12,34 +12,73 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { API_KEY } from '../Api/api_key';
 
 function createData(
+  date,
   name,
+  id,
   estimated_diameter_min,
   estimated_diameter_max,
   potentially_haz,
   sentry_obj,
 ) {
   return {
+    date,
     name,
+    id,
     estimated_diameter_min,
     estimated_diameter_max,
     potentially_haz,
     sentry_obj,
-    approaches: [
-      {
-        previousFive: [],
-      },
-      {
-        nextFive: [],
-      },
-    ],
   };
 }
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [previousApproaches, setPreviousApproaches] = useState([]);
+  const [nextApproaches, setNextApproaches] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function fetchNeoFromApi(id) {
+    setIsLoading(true);
+    const API_URL = `https://api.nasa.gov/neo/rest/v1/neo/${id}?api_key=${API_KEY}`
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const closeApproachData = json.close_approach_data;
+    const indexOfSearchedDate = closeApproachData.findIndex((approach) => approach.close_approach_date === row.date);
+
+    // set previous approaches
+    let prevAppr = [];
+    for (let i = 1; i <= 5; i++) {
+      if (closeApproachData[indexOfSearchedDate - i]) {
+        const prev = closeApproachData[indexOfSearchedDate - i].close_approach_date.split('-').reverse().join('/');
+        prevAppr.push(prev);
+      } else break;
+    }
+    setPreviousApproaches(prevAppr);
+
+    // set next approaches
+    let nextAppr = [];
+    for (let i = 1; i <= 5; i++) {
+      if (closeApproachData[indexOfSearchedDate + i]) {
+        const next = closeApproachData[indexOfSearchedDate + i].close_approach_date.split('-').reverse().join('/');
+        nextAppr.push(next);
+      } else break;
+    }
+    setNextApproaches(nextAppr);
+    setIsLoading(false);
+  }
+  
+  const toggleDrawer = () => {
+    if (!open) {
+      fetchNeoFromApi(row.id);
+      setOpen(!open);
+    } else {
+      setOpen(!open);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -48,7 +87,7 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={toggleDrawer}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -124,8 +163,8 @@ export default function CollapsibleTable({ data }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, i) => {
-            return <Row key={row.name} row={row} />
+          {rows.map((row) => {
+            return <Row key={row.id} row={row} />
           })}
         </TableBody>
       </Table>
