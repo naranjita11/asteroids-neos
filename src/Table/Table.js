@@ -96,23 +96,17 @@ function Row(props) {
 }
 
 export default function CollapsibleTable({ data }) {
-  let fullDataArray = [];
-
-  if (Object.keys(data).length !== 0) {
-    fullDataArray = [];
-    const numOfDays = Object.keys(data).length;
-    const dataWithoutDates = Object.values(data);
-    for (let i = 0; i < numOfDays; i++) {
-        const neosForThisDay = dataWithoutDates[i];
-        fullDataArray = [...fullDataArray, ...neosForThisDay];
-    }
-    console.log('fullDataArray:', fullDataArray);
-  }
-
   const createRows = () => {
-    return fullDataArray.map((neo) => {
-        return createData(neo.name, neo.estimated_diameter.meters.estimated_diameter_min, neo.estimated_diameter.meters.estimated_diameter_max, neo.is_potentially_hazardous_asteroid, neo.is_sentry_object);
-    })
+    const numOfDays = Object.keys(data).length;
+    let rows = [];
+    for (let i = 0; i < numOfDays; i++) {
+      const date = Object.keys(data)[i];
+      Object.values(data)[i].forEach((neo) => {
+          const rowData = createData(date, neo.name, neo.id, neo.estimated_diameter.meters.estimated_diameter_min, neo.estimated_diameter.meters.estimated_diameter_max, neo.is_potentially_hazardous_asteroid, neo.is_sentry_object);
+          rows.push(rowData);
+      });
+    }
+    return rows.reverse();
   };
 
   const rows = createRows();
