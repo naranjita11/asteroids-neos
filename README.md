@@ -3,10 +3,10 @@ Hello Asteroids!
 The Challenge:
 Create a reactive single page web app that displays a paginated table listing near earth objects
 within a selectable timeframe using the nasa NeoWs API https://api.nasa.gov/.
-● The page should allow the entry of start and end dates.
-● The page should then display the following information:Name, estimated diameter, is it
+- The page should allow the entry of start and end dates.
+- The page should then display the following information:Name, estimated diameter, is it
 a potentially hazardous asteroid, is it a sentry object
-● It must have the ability to select or click on an object and then show the next 5 and
+- It must have the ability to select or click on an object and then show the next 5 and
 previous 5 approaches to Earth.
 
 To run this application:
