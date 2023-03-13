@@ -16,10 +16,7 @@ previous 5 approaches to Earth.
 - npm start
 
 **Next steps**:
-I focussed on the happy path but next steps and things to improve are:
 - have the end date date-picker know about the start date that has been entered
-- error messaging to the user if the range limit is exceeded
-- refactoring into smaller and more reusable components
 - add pagination to the table listing
 
 **Screenshot**:
