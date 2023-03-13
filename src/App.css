@@ -12,6 +12,11 @@
   color: cornflowerblue;
 }
 
+.error-text {
+  padding: 1rem 0;
+  color: red;
+}
+
 .info-text {
   padding: 1rem 0;
   color: green;

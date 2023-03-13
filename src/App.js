@@ -12,6 +12,7 @@ function App() {
   const [elementCount, setElementCount] = useState(undefined);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [data, setData] = useState(undefined);
+  const [displayErrMessage, setDisplayErrMessage] = useState(false);
 
   const setValue = (val, text) => {
     const month = val.$M + 1;
@@ -20,14 +21,28 @@ function App() {
     const DATE = `${val.$y}-${oneDigitMonth ? '0'+month : month}-${oneDigitDay ? '0'+val.$D : val.$D}`;
     text === "start" ? setStartDate(DATE) : setEndDate(DATE);
   };
-  
+
   async function fetchDataFromApi() {
-    const API_URL = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${API_KEY}`
-    const res = await fetch(API_URL);
-    const json = await res.json();
-    setIsFetchingData(false);
-    setElementCount(json.element_count);
-    setData(json.near_earth_objects);
+    const API_URL = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${API_KEY}`;
+    setDisplayErrMessage(false);
+    try {
+      let res = await fetch(API_URL);
+      if (!res.ok) {
+        setIsFetchingData(false);
+        setElementCount(undefined);
+        setData(undefined);
+        const error = await res.json();
+        throw new Error(error.error_message);
+      } else {
+        const json = await res.json();
+        setIsFetchingData(false);
+        setElementCount(json.element_count);
+        setData(json.near_earth_objects);
+      }
+    } catch (e) {
+      setDisplayErrMessage(true);
+      console.error(e);
+    }
   }
 
   const onClick = () => {
@@ -80,6 +95,8 @@ function App() {
           Find asteroids
         </Button>
       </div>
+      {displayErrMessage &&
+        <Typography className='error-text'>Something went wrong - please try again</Typography>}
       {isFetchingData &&
         <Typography className='fetching-text'>Fetching data - please wait...</Typography>}
       {elementCount &&
