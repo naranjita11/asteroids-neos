@@ -99,9 +99,9 @@ function App() {
         <Typography className='error-text'>Something went wrong - please try again</Typography>}
       {isFetchingData &&
         <Typography className='fetching-text'>Fetching data - please wait...</Typography>}
-      {elementCount &&
+      {elementCount !== undefined &&
         <Typography variant='h5' className='info-text'>
-          {`There are ${elementCount} asteroids nearby:`}
+          {`There ${elementCount === 1 ? 'is' : 'are'} ${elementCount} asteroid${elementCount === 1 ? '' : 's'} nearby:`}
         </Typography>}
       {data && <CollapsibleTable
         data={data}
